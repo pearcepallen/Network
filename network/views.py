@@ -64,3 +64,5 @@ def register(request):
 
 def post(request):
     return render(request, "network/post.html") 
+
+

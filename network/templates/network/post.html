@@ -1,5 +1,18 @@
 {% extends "network/layout.html" %}
 
 {% block body %}
-   NEW POST TODO
+    <h1>New Post</h1>
+   <div id="newpost">
+       <form action=" ">
+           {% csrf_token %}
+           <textarea name="post" id="post">
+               Enter post message...
+           </textarea>
+           <input type="submit">
+       </form>
+   </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/network.js' %}"></script>
 {% endblock %}
