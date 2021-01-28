@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.decorators.csrf import csrf_exempt
+#from django.views.decorators.csrf import csrf_exempt
 
 
 from .models import *
@@ -70,7 +70,7 @@ def register(request):
 def post(request):
     return render(request, "network/post.html") 
 
-@csrf_exempt
+#@csrf_exempt
 def new_post(request):
     # New Post must be via POST
     if request.method != "POST":
