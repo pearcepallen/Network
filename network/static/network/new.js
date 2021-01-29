@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelector('#new_post').addEventListener('submit', new_form);
+    document.querySelector('#new_post').addEventListener('submit', new_form);  
 });
+
 
 function new_form(event) {
     event.preventDefault();

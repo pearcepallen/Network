@@ -85,3 +85,13 @@ def new_post(request):
 
     return JsonResponse({"message": "Successfully posted."}, status=201)
 
+
+def posts(request):
+    posts = Post.objects.all()
+    if not posts:
+        return JsonResponse({"message": "No Posts"}, status=200)
+    else:
+        posts = posts.order_by("-timestamp").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
