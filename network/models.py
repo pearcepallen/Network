@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    pass
+    followers = models.ForeignKey("self", on_delete=models.PROTECT, null=True)
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -15,6 +15,6 @@ class Post(models.Model):
         return {
             "username": self.user.username,
             "content": self.content,
-            "timestamp": self.timestamp,
+            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
             "like": self.like
         }

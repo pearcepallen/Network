@@ -1,7 +1,12 @@
+textarea{
+    width: 100%;
+}
+
 #newpost{
     align-items: center;
 }
 
-textarea{
-    width: 100%;
+.single_post{
+    border: 2px solid black;
+    margin: 15px 10px 15px 10px;
 }

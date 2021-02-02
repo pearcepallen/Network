@@ -70,6 +70,23 @@ def register(request):
 def post(request):
     return render(request, "network/post.html") 
 
+
+def profile(request):
+    return render(request, "network/profile.html")
+
+
+def profile_posts(request, user):
+    try:
+        posts = Post.objects.filter(user__username=user)
+    except Post.DoesNotExist:
+        return JsonResponse({"error": "No posts found."}, status=404)
+
+    # Return user posts
+    if request.method == "GET":
+        posts = posts.order_by("-timestamp").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
 #@csrf_exempt
 def new_post(request):
     # New Post must be via POST
@@ -93,5 +110,7 @@ def posts(request):
     else:
         posts = posts.order_by("-timestamp").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
 
 

@@ -3,8 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function new_form(event) {
-    event.preventDefault();
+function new_form() {
     const form = document.querySelector('#new_post');
     csrftoken = form.getElementsByTagName('input')[0].value;
     fetch('/new_post',{
