@@ -25,7 +25,8 @@ function posts() {
                 user.innerHTML = `${p.username}`;
                 user.addEventListener('click', function() {
                     console.log(`${p.username} was clicked`);
-                    window.location.href = `/profile`;
+                    window.location.replace = `profile/${p.username}`;
+                    profile(`${p.username}`);
                 });
 
                 const content = document.createElement('div');
@@ -63,7 +64,7 @@ function posts() {
 
 function profile(user) {
     // Load user posts
-    fetch(`/profile_posts/${user}`)
+    fetch(`/posts/${user}`)
         .then(response => response.json())
         .then(posts => {    
             console.log(posts);

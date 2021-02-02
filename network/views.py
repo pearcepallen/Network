@@ -71,8 +71,10 @@ def post(request):
     return render(request, "network/post.html") 
 
 
-def profile(request):
-    return render(request, "network/profile.html")
+def profile(request, user):
+    return render(request, "network/profile.html", {
+        "user":"user"
+    })
 
 
 def profile_posts(request, user):
