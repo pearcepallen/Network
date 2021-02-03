@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         posts();
     }
-    /*if(document.querySelector('#profile'))
+    if(document.querySelector('#profile'))
     {
-        profile();
-    }*/
+        var user = document.querySelector('h1').innerHTML;
+        profile(user);
+    }
     
 });
 
@@ -19,16 +20,16 @@ function posts() {
             console.log(post);
 
             post.forEach(p => {
-
+                // Add User div and link
                 const user = document.createElement('div');
                 user.className = 'user';
-                user.innerHTML = `${p.username}`;
-                user.addEventListener('click', function() {
-                    console.log(`${p.username} was clicked`);
-                    window.location.replace = `profile/${p.username}`;
-                    profile(`${p.username}`);
-                });
+                //user.innerHTML = `${p.username}`;
+                const a = document.createElement('a');
+                a.innerHTML = `${p.username}`;
+                a.href = `/profile/${p.username}`;
+                user.append(a);
 
+                //Add content div
                 const content = document.createElement('div');
                 content.className = 'user';
                 content.innerHTML = `${p.content}`;
@@ -36,6 +37,7 @@ function posts() {
                     console.log(`${p.content} was clicked`);
                 });
 
+                //Add time div
                 const time = document.createElement('div');
                 time.className = 'user';
                 time.innerHTML = `${p.timestamp}`;
@@ -43,6 +45,7 @@ function posts() {
                     console.log(`${p.timestamp} was clicked`);
                 });
 
+                //Add likes div
                 const like = document.createElement('div');
                 like.className = 'user';
                 like.innerHTML = `Likes: ${p.like}`;
@@ -51,6 +54,7 @@ function posts() {
                 });
 
                 //innerHTML destroys child elements
+                // Add a post div with previous children divs
                 const post_info = document.createElement('div');
                 post_info.className = "single_post";
                 post_info.append(user);
