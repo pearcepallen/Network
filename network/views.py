@@ -114,5 +114,21 @@ def posts(request):
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
+def follow(request, user):
+    #Check if user is already followed by request.user
+    try:
+        f = Following.objects.get(user=user, following=request.user)
+    except Following.DoesNotExist:
+        f = Following(user=user, follow=request.user)
+        f.save()
+        return JsonResponse({"message": "User followed"})
+
+    #Delete entry if already followed
+    f.delete()
+    return JsonResponse({"message": "User unfollowed"})
+
+
+
+
 
 

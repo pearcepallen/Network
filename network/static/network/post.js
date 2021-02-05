@@ -36,6 +36,15 @@ function profile(user) {
         });
 }
 
+function follow(user) {
+    //Follow or Unfollow
+    fetch(`/follow/${user}`)
+        .then(response => response.json())
+        .then(result => { 
+            console.log(result);
+        });
+}
+
 
 function load_posts(post, page) {
     post.forEach(p => {
