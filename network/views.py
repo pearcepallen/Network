@@ -114,12 +114,12 @@ def posts(request):
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
-def follow(request, user):
+def follow(request, user, req_user):
     #Check if user is already followed by request.user
     try:
-        f = Following.objects.get(user=user, following=request.user)
+        f = Following.objects.get(user__username=user, following__username=req_user)
     except Following.DoesNotExist:
-        f = Following(user=user, follow=request.user)
+        f = Following(user=User.objects.get(username=user), following=User.objects.get(username=req_user))
         f.save()
         return JsonResponse({"message": "User followed"})
 

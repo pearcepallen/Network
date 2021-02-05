@@ -7,12 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         var user = document.querySelector('#profile_user').innerHTML;
         profile(user);
-        document.addEventListener('click', () => {
+        document.querySelector('#follow_button').addEventListener('click', () => {
             follow(user);
         });
     }
-
-    
 });
 
 
@@ -42,7 +40,7 @@ function profile(user) {
 
 function follow(user) {
     //Follow or Unfollow
-    fetch(`/follow/${user}`)
+    fetch(`/follow/${user}/${curr_user}`)
         .then(response => response.json())
         .then(result => { 
             console.log(result);
