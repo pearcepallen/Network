@@ -5,9 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     if(document.querySelector('#profile'))
     {
-        var user = document.querySelector('h1').innerHTML;
+        var user = document.querySelector('#profile_user').innerHTML;
         profile(user);
+        document.addEventListener('click', () => {
+            follow(user);
+        });
     }
+
     
 });
 

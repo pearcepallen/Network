@@ -73,7 +73,7 @@ def post(request):
 
 def profile(request, user):
     return render(request, "network/profile.html", {
-        "user":user
+        "profile_user":user
     })
 
 
