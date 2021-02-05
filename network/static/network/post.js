@@ -7,9 +7,13 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         var user = document.querySelector('#profile_user').innerHTML;
         profile(user);
-        document.querySelector('#follow_button').addEventListener('click', () => {
-            follow(user);
-        });
+
+        var follow_button = document.querySelector('#follow_button')
+        if(follow_button){
+            follow_button.addEventListener('click', () => {
+                follow(user);
+            });
+        }
     }
 });
 
@@ -37,6 +41,7 @@ function profile(user) {
             load_posts(posts, '#profile');
         });
 }
+
 
 function follow(user) {
     //Follow or Unfollow

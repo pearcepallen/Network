@@ -6,7 +6,9 @@
         <h1 id="profile_user">{{ profile_user }}</h1>
         <div>Follwers:</div>
         <div>Following:</div>
+        {% if profile_user != user.username %}
         <div><button type ="button" id="follow_button"></button></div>
+        {% endif %}
     </div>
 
     <div id="profile">
