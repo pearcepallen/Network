@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     {
         posts();
     }
+    
     if(document.querySelector('#profile'))
     {
         var user = document.querySelector('#profile_user').innerHTML;
@@ -10,6 +11,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var follow_button = document.querySelector('#follow_button')
         if(follow_button){
+            fetch(`/followed/${user}/${curr_user}`)
+                .then(response => response.json())
+                .then(response => {
+                    follow_button.innerHTML = (response.follow === true? 'Follow' : 'Unfollow');
+                });
+            
             follow_button.addEventListener('click', () => {
                 follow(user);
             });

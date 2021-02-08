@@ -128,7 +128,16 @@ def follow(request, user, req_user):
     return JsonResponse({"message": "User unfollowed"})
 
 
+def followed(request, user, req_user):
+    #Check if user is already followed by request.user
+    try:
+        f = Following.objects.get(user__username=user, following__username=req_user)
+    except Following.DoesNotExist:
+        #Return false if user is not following
+        return JsonResponse({"follow":False})
 
+    #Return true entry if user is followed
+    return JsonResponse({"follow":True})
 
 
 
