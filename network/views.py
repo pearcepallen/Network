@@ -142,10 +142,10 @@ def followed(request, user, req_user):
 @login_required(login_url="login")
 def following_posts(request, req_user):
     following = Following.objects.filter(following__username=req_user)
-    posts = Post.objects.none()
+    posts = Post.objects.none() #empty queryset to merge
 
     for follow in following:
-        posts = posts | Post.objects.filter(user=follow.user)
+        posts = posts | Post.objects.filter(user=follow.user) #merge querysets
 
     if not posts:
         return JsonResponse({"message": "No Posts"}, status=200)

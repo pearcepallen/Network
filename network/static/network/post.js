@@ -47,6 +47,8 @@ function following() {
         .then(response => response.json())
         .then(post => {
             console.log(post);
+
+            load_posts(post, '#following');
         })
 }
 
