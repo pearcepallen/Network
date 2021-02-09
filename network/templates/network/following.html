@@ -1,0 +1,13 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div id="following">
+        
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>const curr_user = "{{user}}"</script>
+    <script src="{% static 'network/post.js' %}"></script>
+{% endblock %}

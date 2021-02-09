@@ -1,11 +1,11 @@
 import json
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-#from django.views.decorators.csrf import csrf_exempt
 
 
 from .models import *
@@ -89,7 +89,6 @@ def profile_posts(request, user):
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
-#@csrf_exempt
 def new_post(request):
     # New Post must be via POST
     if request.method != "POST":
@@ -139,5 +138,23 @@ def followed(request, user, req_user):
     #Return true entry if user is followed
     return JsonResponse({"follow":True})
 
+
+@login_required(login_url="login")
+def following_posts(request, req_user):
+    following = Following.objects.filter(following__username=req_user)
+    posts = []
+
+    for follow in following:
+        posts.extend(Post.objects.filter(user=follow.user))
+
+    if not posts:
+        return JsonResponse({"message": "No Posts"}, status=200)
+    else:
+        #posts = posts.order_by("-timestamp").all()
+        return JsonResponse([post.serialize() for post in posts], safe=False)
+
+
+def following(request):
+    return render(request, "network/following.html") 
 
 
