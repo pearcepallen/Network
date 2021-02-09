@@ -142,15 +142,15 @@ def followed(request, user, req_user):
 @login_required(login_url="login")
 def following_posts(request, req_user):
     following = Following.objects.filter(following__username=req_user)
-    posts = []
+    posts = Post.objects.none()
 
     for follow in following:
-        posts.extend(Post.objects.filter(user=follow.user))
+        posts = posts | Post.objects.filter(user=follow.user)
 
     if not posts:
         return JsonResponse({"message": "No Posts"}, status=200)
     else:
-        #posts = posts.order_by("-timestamp").all()
+        posts = posts.order_by("-timestamp").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
 
