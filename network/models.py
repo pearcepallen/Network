@@ -31,3 +31,7 @@ class Following(models.Model):
     def clean(self):
         if self.user == self.following:
             raise ValidationError("Cannot follow self")
+
+class Like(models.Model):
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="posts")
+    user = models.ForeignKey("User", on_delete=models.CASCADE)
