@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse
 
@@ -66,7 +67,7 @@ def register(request):
     else:
         return render(request, "network/register.html")
 
-
+@login_required(login_url="login")
 def post(request):
     return render(request, "network/post.html") 
 
@@ -88,7 +89,7 @@ def profile_posts(request, user):
         posts = posts.order_by("-timestamp").all()
         return JsonResponse([post.serialize() for post in posts], safe=False)
 
-
+@login_required(login_url="login")
 def new_post(request):
     # New Post must be via POST
     if request.method != "POST":
@@ -158,3 +159,14 @@ def following(request):
     return render(request, "network/following.html") 
 
 
+def page_posts(request, page):
+    posts = Post.objects.all()
+    posts = posts.order_by("-timestamp").all()
+    paginator = Paginator(posts, 10) # Show 10 posts per page.
+
+    page_obj = paginator.get_page(page)
+
+    data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
+            {"next": page_obj.has_next() and page_obj.next_page_number() or None },
+            {"data": [page.serialize() for page in page_obj]})
+    return JsonResponse(data, safe=False)

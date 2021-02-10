@@ -42,6 +42,15 @@ function posts() {
         });
 }
 
+function page_posts(page) {
+    // Pagination of Posts
+    fetch(`page_posts/${page}`)
+        .then(response => response.json())
+        .then (post => {
+            console.log(post);
+        })
+}
+
 function following() {
     fetch(`/following_posts/${curr_user}`)
         .then(response => response.json())
