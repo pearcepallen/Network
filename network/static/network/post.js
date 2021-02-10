@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     if(document.querySelector('#posts'))
     {
-        posts();
+        posts(1);
     }
 
     if(document.querySelector('#following'))
@@ -30,26 +30,18 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function posts() {
+function posts(page) {
     // Load Posts
-    fetch('/posts')
+    fetch(`/posts/${page}`)
         .then(response => response.json())
         .then(post => {
             // Print posts
-            console.log(post);
+            console.log(post[2].data);
 
-            load_posts(post, '#posts');
+            load_posts(post[2].data, '#posts');
         });
 }
 
-function page_posts(page) {
-    // Pagination of Posts
-    fetch(`page_posts/${page}`)
-        .then(response => response.json())
-        .then (post => {
-            console.log(post);
-        })
-}
 
 function following() {
     fetch(`/following_posts/${curr_user}`)

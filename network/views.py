@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.serializers import serialize
 from django.urls import reverse
 
 
@@ -105,14 +107,32 @@ def new_post(request):
     return JsonResponse({"message": "Successfully posted."}, status=201)
 
 
-def posts(request):
+def posts(request, page):
     posts = Post.objects.all()
     if not posts:
         return JsonResponse({"message": "No Posts"}, status=200)
     else:
         posts = posts.order_by("-timestamp").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        paginator = Paginator(posts, 10) # Show 10 posts per page.
 
+        page_obj = paginator.get_page(page)
+        
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
+                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
+                {"data": [page.serialize() for page in page_obj]})
+        return JsonResponse(data, safe=False)
+
+# def page_posts(request, page):
+    # posts = Post.objects.all()
+    # posts = posts.order_by("-timestamp").all()
+    # paginator = Paginator(posts, 10) # Show 10 posts per page.
+ 
+    # page_obj = paginator.get_page(page)
+
+    # data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
+            # {"next": page_obj.has_next() and page_obj.next_page_number() or None },
+            # {"data": [page.serialize() for page in page_obj]})
+    # return JsonResponse(data, safe=False)
 
 def follow(request, user, req_user):
     #Check if user is already followed by request.user
@@ -159,14 +179,3 @@ def following(request):
     return render(request, "network/following.html") 
 
 
-def page_posts(request, page):
-    posts = Post.objects.all()
-    posts = posts.order_by("-timestamp").all()
-    paginator = Paginator(posts, 10) # Show 10 posts per page.
-
-    page_obj = paginator.get_page(page)
-
-    data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
-            {"next": page_obj.has_next() and page_obj.next_page_number() or None },
-            {"data": [page.serialize() for page in page_obj]})
-    return JsonResponse(data, safe=False)
