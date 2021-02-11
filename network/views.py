@@ -80,7 +80,7 @@ def profile(request, user):
     })
 
 
-def profile_posts(request, user):
+def profile_posts(request, user, page):
     try:
         posts = Post.objects.filter(user__username=user)
     except Post.DoesNotExist:
@@ -89,7 +89,15 @@ def profile_posts(request, user):
     # Return user posts
     if request.method == "GET":
         posts = posts.order_by("-timestamp").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        paginator = Paginator(posts, 10) # Show 10 posts per page.
+
+        page_obj = paginator.get_page(page)
+        
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
+                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
+                {"data": [page.serialize() for page in page_obj]})
+        return JsonResponse(data, safe=False)
+        
 
 @login_required(login_url="login")
 def new_post(request):
@@ -122,17 +130,6 @@ def posts(request, page):
                 {"data": [page.serialize() for page in page_obj]})
         return JsonResponse(data, safe=False)
 
-# def page_posts(request, page):
-    # posts = Post.objects.all()
-    # posts = posts.order_by("-timestamp").all()
-    # paginator = Paginator(posts, 10) # Show 10 posts per page.
- 
-    # page_obj = paginator.get_page(page)
-
-    # data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
-            # {"next": page_obj.has_next() and page_obj.next_page_number() or None },
-            # {"data": [page.serialize() for page in page_obj]})
-    # return JsonResponse(data, safe=False)
 
 def follow(request, user, req_user):
     #Check if user is already followed by request.user
@@ -161,7 +158,7 @@ def followed(request, user, req_user):
 
 
 @login_required(login_url="login")
-def following_posts(request, req_user):
+def following_posts(request, req_user, page):
     following = Following.objects.filter(following__username=req_user)
     posts = Post.objects.none() #empty queryset to merge
 
@@ -172,7 +169,14 @@ def following_posts(request, req_user):
         return JsonResponse({"message": "No Posts"}, status=200)
     else:
         posts = posts.order_by("-timestamp").all()
-        return JsonResponse([post.serialize() for post in posts], safe=False)
+        paginator = Paginator(posts, 10) # Show 10 posts per page.
+
+        page_obj = paginator.get_page(page)
+        
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
+                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
+                {"data": [page.serialize() for page in page_obj]})
+        return JsonResponse(data, safe=False)
 
 
 def following(request):

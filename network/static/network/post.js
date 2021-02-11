@@ -6,13 +6,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(document.querySelector('#following'))
     {
-        following();
+        following(1);
     }
 
     if(document.querySelector('#profile'))
     {
         var user = document.querySelector('#profile_user').innerHTML;
-        profile(user);
+        profile(user, 1);
 
         var follow_button = document.querySelector('#follow_button')
         if(follow_button){
@@ -43,25 +43,25 @@ function posts(page) {
 }
 
 
-function following() {
-    fetch(`/following_posts/${curr_user}`)
+function following(page) {
+    fetch(`/following_posts/${curr_user}/${page}`)
         .then(response => response.json())
         .then(post => {
-            console.log(post);
+            console.log(post[2].data);
 
-            load_posts(post, '#following');
+            load_posts(post[2].data, '#following');
         })
 }
 
 
-function profile(user) {
+function profile(user, page) {
     // Load user posts
-    fetch(`/posts/${user}`)
+    fetch(`/posts/${user}/${page}`)
         .then(response => response.json())
         .then(posts => {    
-            console.log(posts);
+            console.log(posts[2].data);
 
-            load_posts(posts, '#profile');
+            load_posts(posts[2].data, '#profile');
         });
 }
 
