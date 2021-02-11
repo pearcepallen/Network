@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
+var prev_added = false;
+var next_added = false;
 function posts(page) {
     // Load Posts
     fetch(`/posts/${page}`)
@@ -37,8 +38,35 @@ function posts(page) {
         .then(post => {
             // Print posts
             console.log(post[2].data);
-
+            document.querySelector('#posts').innerHTML="";
             load_posts(post[2].data, '#posts');
+            if(post[0].prev == null)
+            {
+                document.querySelector('#prev').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#prev').style.display = 'block';
+                if(prev_added === false)
+                {
+                    document.querySelector('#prev').addEventListener('click', () => posts(page-1));
+                    prev_added = true;
+                }   
+            }
+
+            if(post[1].next == null)
+            {
+                document.querySelector('#next').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#next').style.display = 'block';
+                if(next_added === false)
+                {
+                    document.querySelector('#next').addEventListener('click', () => posts(page+1));
+                    next_added = true;
+                }
+            }
         });
 }
 
@@ -50,6 +78,7 @@ function following(page) {
             console.log(post[2].data);
 
             load_posts(post[2].data, '#following');
+
         })
 }
 
