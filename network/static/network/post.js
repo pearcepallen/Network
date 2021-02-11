@@ -29,8 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-var prev_added = false;
-var next_added = false;
+var posts_prev = false, posts_next = false;
 function posts(page) {
     // Load Posts
     fetch(`/posts/${page}`)
@@ -38,34 +37,36 @@ function posts(page) {
         .then(post => {
             // Print posts
             console.log(post[2].data);
+
             document.querySelector('#posts').innerHTML="";
             load_posts(post[2].data, '#posts');
-            if(post[0].prev == null)
+            
+            if(post[0].prev === null)
             {
                 document.querySelector('#prev').style.display = 'none';
             }
             else
             {
                 document.querySelector('#prev').style.display = 'block';
-                if(prev_added === false)
+                if(posts_prev === false)
                 {
                     document.querySelector('#prev').addEventListener('click', () => posts(page-1));
-                    prev_added = true;
-                }   
+                    posts_prev = true;
+                }      
             }
 
-            if(post[1].next == null)
+            if(post[1].next === null)
             {
                 document.querySelector('#next').style.display = 'none';
             }
             else
             {
                 document.querySelector('#next').style.display = 'block';
-                if(next_added === false)
+                if(posts_next === false)
                 {
-                    document.querySelector('#next').addEventListener('click', () => posts(page+1));
-                    next_added = true;
-                }
+                    document.querySelector('#next').addEventListener('click', () => posts(page+1)); 
+                    posts_next = true; 
+                } 
             }
         });
 }
@@ -77,8 +78,36 @@ function following(page) {
         .then(post => {
             console.log(post[2].data);
 
+            document.querySelector('#following').innerHTML="";
             load_posts(post[2].data, '#following');
 
+            if(post[0].prev === null)
+            {
+                document.querySelector('#prev').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#prev').style.display = 'block';
+                if(posts_prev === false)
+                {
+                    document.querySelector('#prev').addEventListener('click', () => posts(page-1));
+                    posts_prev = true;
+                }      
+            }
+
+            if(post[1].next === null)
+            {
+                document.querySelector('#next').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#next').style.display = 'block';
+                if(posts_next === false)
+                {
+                    document.querySelector('#next').addEventListener('click', () => posts(page+1)); 
+                    posts_next = true; 
+                } 
+            }
         })
 }
 
@@ -87,10 +116,39 @@ function profile(user, page) {
     // Load user posts
     fetch(`/posts/${user}/${page}`)
         .then(response => response.json())
-        .then(posts => {    
-            console.log(posts[2].data);
+        .then(post => {    
+            console.log(post[2].data);
 
-            load_posts(posts[2].data, '#profile');
+            document.querySelector('#profile').innerHTML="";
+            load_posts(post[2].data, '#profile');
+
+            if(post[0].prev === null)
+            {
+                document.querySelector('#prev').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#prev').style.display = 'block';
+                if(posts_prev === false)
+                {
+                    document.querySelector('#prev').addEventListener('click', () => posts(page-1));
+                    posts_prev = true;
+                }      
+            }
+
+            if(post[1].next === null)
+            {
+                document.querySelector('#next').style.display = 'none';
+            }
+            else
+            {
+                document.querySelector('#next').style.display = 'block';
+                if(posts_next === false)
+                {
+                    document.querySelector('#next').addEventListener('click', () => posts(page+1)); 
+                    posts_next = true; 
+                } 
+            }
         });
 }
 
