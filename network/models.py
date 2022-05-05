@@ -4,7 +4,8 @@ from django.db import models
 
 
 class User(AbstractUser):
-   pass
+   def __str__(self):
+       return f"{self.id}: {self.username}"
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -21,9 +22,11 @@ class Post(models.Model):
         }
 
 class Following(models.Model):
-    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="following")
+    user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="following_user")
     following = models.ForeignKey("User", on_delete=models.CASCADE, related_name="followers")
     created = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+       return f"User: {self.user} | Following: {self.following}"
 
     class Meta:
         unique_together = ["user", "following"]

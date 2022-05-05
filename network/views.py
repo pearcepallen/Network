@@ -155,6 +155,24 @@ def followed(request, user, req_user):
 
     #Return true entry if user is followed
     return JsonResponse({"follow":True})
+ 
+# req_user is username
+def following_count(request, req_user):
+    try:
+        f = Following.objects.filter(following__username=req_user).count()
+        return JsonResponse({"Following": f})
+    except Following.DoesNotExist:
+        return JsonResponse({"Following": 0})
+
+# req_user is username and not id
+def follower_count(request, req_user):
+    try:
+        user = User.objects.get(username=req_user)
+        f = user.following_user.all().count()
+
+        return JsonResponse({"Follower": f})
+    except Following.DoesNotExist:
+        return JsonResponse({"Follower": 0})
 
 
 @login_required(login_url="login")
