@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var user = document.querySelector('#profile_user').innerHTML;
         profile(user, 1);
 
+        // Follower Count
+        follower_count(user);
+        
+        // Following Count
+        following_count(user);
+        
+
         var follow_button = document.querySelector('#follow_button')
         if(follow_button){
             fetch(`/following/${user}/${curr_user}`)
@@ -199,4 +206,25 @@ function load_posts(post, page) {
         post_info.append(like);
         document.querySelector(page).append(post_info);
     })
+}
+
+function following_count(user) {
+    //Follow or Unfollow
+    fetch(`/following_count/${user}`)
+        .then(response => response.json())
+        .then(result => { 
+            console.log(result.data)
+            document.querySelector('#following_count').innerHTML += " " + result.data;
+        });
+}
+
+function follower_count(user) {
+    //Follow or Unfollow
+    fetch(`/follower_count/${user}`)
+        .then(response => response.json())
+        .then(result => { 
+            console.log(result.data);
+            document.querySelector('#follower_count').innerHTML += " " + result.data;
+        });
+    
 }
