@@ -36,5 +36,11 @@ class Following(models.Model):
             raise ValidationError("Cannot follow self")
 
 class Like(models.Model):
-    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="posts")
+    post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="post_likes")
     user = models.ForeignKey("User", on_delete=models.CASCADE)
+        
+    def __str__(self):
+       return f"{self.post}: User{self.user}"
+
+    class Meta:
+        unique_together = ["post", "user"]

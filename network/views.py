@@ -201,3 +201,22 @@ def following(request):
     return render(request, "network/following.html") 
 
 
+
+# Likes 
+# post is id of specific post
+def getLikes(request, post):
+    try:
+        post = Post.objects.get(id=post)
+        like_count = post.post_likes.all().count()
+        return JsonResponse({"likes": like_count})
+    except Post.DoesNotExist:
+        return JsonResponse({"likes": "0"})
+
+def createLike(request, post):
+    pass
+
+def deleteLike(request, post):
+    pass
+
+
+
