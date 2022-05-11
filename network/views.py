@@ -202,8 +202,10 @@ def following(request):
 
 
 
-# Likes 
+# Like Functions
 # post is id of specific post
+
+# Count likes for a post
 def getLikes(request, post):
     try:
         post = Post.objects.get(id=post)
@@ -212,11 +214,16 @@ def getLikes(request, post):
     except Post.DoesNotExist:
         return JsonResponse({"likes": "0"})
 
-def createLike(request, post):
-    pass
-
-def deleteLike(request, post):
-    pass
+# Like or remove like from post with user
+def like(request, post, user):
+    try:
+        f = Like.objects.get(post__id=post, user__username=user)
+        f.delete()
+        return JsonResponse({"message": "Like found and deleted. (Unlike)"})     
+    except Like.DoesNotExist:
+        f = Like(post=Post.objects.get(id=post), user=User.objects.get(username=user))
+        f.save()
+        return JsonResponse({"message": "Post liked"})
 
 
 

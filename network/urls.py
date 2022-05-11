@@ -4,6 +4,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Pages
     path("", views.index, name="index"),
     path("post", views.post, name="post"),
     path("login", views.login_view, name="login"),
@@ -25,5 +26,5 @@ urlpatterns = [
     path("follower_count/<str:req_user>", views.follower_count, name="follower_count"),
 
     path("like/<int:post>", views.getLikes, name="like_count"),
-
+    path("like/<int:post>/<str:user>", views.like, name="like"),
 ]
