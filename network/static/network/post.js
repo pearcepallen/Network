@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var follow_button = document.querySelector('#follow_button')
         if(follow_button){
-            fetch(`/following/${user}/${curr_user}`)
+            fetch(`/following/${user}/${curr_user}`) 
                 .then(response => response.json())
                 .then(response => {
                     follow_button.innerHTML = (response.follow === true? 'Unfollow' : 'Follow');
@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// curr_user is user currently signed in
+
 var posts_prev = false, posts_next = false;
 function posts(page) {
     // Load Posts
@@ -43,12 +45,12 @@ function posts(page) {
         .then(response => response.json())
         .then(post => {
             // Print posts
-            console.log(post[2].data);
+            console.log(post.data);
 
             document.querySelector('#posts').innerHTML="";
-            load_posts(post[2].data, '#posts');
+            load_posts(post.data, '#posts');
             
-            if(post[0].prev === null)
+            if(post.prev === null)
             {
                 document.querySelector('#prev').style.display = 'none';
             }
@@ -62,7 +64,7 @@ function posts(page) {
                 }      
             }
 
-            if(post[1].next === null)
+            if(post.next === null)
             {
                 document.querySelector('#next').style.display = 'none';
             }
@@ -83,12 +85,10 @@ function following(page) {
     fetch(`/following_posts/${curr_user}/${page}`)
         .then(response => response.json())
         .then(post => {
-            console.log(post[2].data);
-
             document.querySelector('#following').innerHTML="";
-            load_posts(post[2].data, '#following');
+            load_posts(post.data, '#following');
 
-            if(post[0].prev === null)
+            if(post.prev === null)
             {
                 document.querySelector('#prev').style.display = 'none';
             }
@@ -102,7 +102,7 @@ function following(page) {
                 }      
             }
 
-            if(post[1].next === null)
+            if(post.next === null)
             {
                 document.querySelector('#next').style.display = 'none';
             }
@@ -124,12 +124,12 @@ function profile(user, page) {
     fetch(`/posts/${user}/${page}`)
         .then(response => response.json())
         .then(post => {    
-            console.log(post[2].data);
+            console.log(post.data);
 
             document.querySelector('#profile').innerHTML="";
-            load_posts(post[2].data, '#profile');
+            load_posts(post.data, '#profile');
 
-            if(post[0].prev === null)
+            if(post.prev === null)
             {
                 document.querySelector('#prev').style.display = 'none';
             }
@@ -143,7 +143,7 @@ function profile(user, page) {
                 }      
             }
 
-            if(post[1].next === null)
+            if(post.next === null)
             {
                 document.querySelector('#next').style.display = 'none';
             }
@@ -170,8 +170,19 @@ function follow(user) {
 }
 
 
+function update_like(post, user) {
+    //Like or unlike a post
+    fetch(`/like/${post}/${user}`)
+        .then(response => response.json())
+        .then(result => { 
+            return result
+        });
+}
+
 function load_posts(post, page) {
     post.forEach(p => {
+        var likes = 0;
+        
         // Add User div and link
         const user = document.createElement('div');
         user.className = 'user';
@@ -195,6 +206,18 @@ function load_posts(post, page) {
         const like = document.createElement('div');
         like.className = 'user';
         like.innerHTML = `Likes: ${p.like}`;
+
+        //Add like button
+        const like_button = document.createElement('button');
+        like_button.className = 'like-button';
+        like_button.innerHTML = 'Like';
+        like_button.onclick = update_like(p.id, curr_user);
+        // var test = update_like(p.id, curr_user);
+        // console.log(test);
+        /*.then(
+                function(value) {console.log(`Testing return value ${value.message}`);},
+                function(error) {console.log(`Error: ${error}`)},
+            );*/
     
         //innerHTML destroys child elements
         // Add a post div with previous children divs
@@ -204,8 +227,11 @@ function load_posts(post, page) {
         post_info.append(content);
         post_info.append(time);
         post_info.append(like);
+        post_info.append(like_button);
         document.querySelector(page).append(post_info);
     })
+    
+    
 }
 
 function following_count(user) {
@@ -228,3 +254,9 @@ function follower_count(user) {
         });
     
 }
+
+// function get_likes(post) {
+//     fetch(`/like/${post}`)
+//         .then(response => response.json)
+// }
+

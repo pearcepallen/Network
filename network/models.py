@@ -4,8 +4,9 @@ from django.db import models
 
 
 class User(AbstractUser):
-   def __str__(self):
-       return f"{self.id}: {self.username}"
+#    def __str__(self):
+    #    return f"{self.id}: {self.username}"
+    pass
 
 class Post(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
@@ -15,6 +16,7 @@ class Post(models.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "username": self.user.username,
             "content": self.content,
             "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),

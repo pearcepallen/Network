@@ -93,9 +93,9 @@ def profile_posts(request, user, page):
 
         page_obj = paginator.get_page(page)
         
-        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
-                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
-                {"data": [page.serialize() for page in page_obj]})
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None,
+                "next": page_obj.has_next() and page_obj.next_page_number() or None,
+                "data": [page.serialize() for page in page_obj]})
         return JsonResponse(data, safe=False)
         
 
@@ -125,9 +125,9 @@ def posts(request, page):
 
         page_obj = paginator.get_page(page)
         
-        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
-                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
-                {"data": [page.serialize() for page in page_obj]})
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None,
+                "next": page_obj.has_next() and page_obj.next_page_number() or None ,
+                "data": [page.serialize() for page in page_obj]})
         return JsonResponse(data, safe=False)
 
 
@@ -191,9 +191,9 @@ def following_posts(request, req_user, page):
 
         page_obj = paginator.get_page(page)
         
-        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None},
-                {"next": page_obj.has_next() and page_obj.next_page_number() or None },
-                {"data": [page.serialize() for page in page_obj]})
+        data = ({"prev": page_obj.has_previous() and page_obj.previous_page_number() or None,
+                "next": page_obj.has_next() and page_obj.next_page_number() or None ,
+                "data": [page.serialize() for page in page_obj]})
         return JsonResponse(data, safe=False)
 
 
