@@ -6,9 +6,11 @@ from django.db import models
 class User(AbstractUser):
 #    def __str__(self):
     #    return f"{self.id}: {self.username}"
-    pass
+    # pass
+    id = models.AutoField(primary_key=True)
 
 class Post(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey("User", on_delete=models.CASCADE)
     content = models.TextField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -24,6 +26,7 @@ class Post(models.Model):
         }
 
 class Following(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey("User", on_delete=models.CASCADE, related_name="following_user")
     following = models.ForeignKey("User", on_delete=models.CASCADE, related_name="followers")
     created = models.DateTimeField(auto_now_add=True)
@@ -38,6 +41,7 @@ class Following(models.Model):
             raise ValidationError("Cannot follow self")
 
 class Like(models.Model):
+    id = models.AutoField(primary_key=True)
     post = models.ForeignKey("Post", on_delete=models.CASCADE, related_name="post_likes")
     user = models.ForeignKey("User", on_delete=models.CASCADE)
         

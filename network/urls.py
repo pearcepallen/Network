@@ -18,6 +18,7 @@ urlpatterns = [
     path("new_post", views.new_post, name="new_post"),
     path("posts/<int:page>", views.posts, name="posts"),
     path("posts/<str:user>/<int:page>", views.profile_posts, name="user"),
+    path("posts/edit/<str:post_user>/<int:post_id>", views.edit_post, name="edit_post"),
 
     path("follow/<str:user>/<str:req_user>", views.follow, name="follow"),
     path("following/<str:user>/<str:req_user>", views.followed, name="followed"),
@@ -25,6 +26,6 @@ urlpatterns = [
     path("following_count/<str:req_user>", views.following_count, name="following_count"),
     path("follower_count/<str:req_user>", views.follower_count, name="follower_count"),
 
-    path("like/<int:post>", views.getLikes, name="like_count"),
+    path("like/<int:post>", views.get_likes, name="like_count"),
     path("like/<int:post>/<str:user>", views.like, name="like"),
 ]

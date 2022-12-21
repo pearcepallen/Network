@@ -10,6 +10,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.serializers import serialize
 from django.urls import reverse
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 from .models import *
 
@@ -114,6 +116,21 @@ def new_post(request):
 
     return JsonResponse({"message": "Successfully posted."}, status=201)
 
+# @login_required(login_url="login")
+@csrf_exempt
+def edit_post(request, post_user, post_id):
+    # New Post must be via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request required"}, status=400)
+    else:
+        try:
+            post = Post.objects.get(user__username=post_user, id=post_id)
+            data = json.loads(request.body)
+            post.content = data['content']
+            post.save()
+            return JsonResponse({"message": "Content has been updated"})
+        except Post.DoesNotExist:
+            return JsonResponse({"message": "User cannot edit this post"})
 
 def posts(request, page):
     posts = Post.objects.all()
@@ -206,7 +223,7 @@ def following(request):
 # post is id of specific post
 
 # Count likes for a post
-def getLikes(request, post):
+def get_likes(request, post):
     try:
         post = Post.objects.get(id=post)
         like_count = post.post_likes.all().count()
@@ -224,6 +241,8 @@ def like(request, post, user):
         f = Like(post=Post.objects.get(id=post), user=User.objects.get(username=user))
         f.save()
         return JsonResponse({"message": "Post liked"})
+
+
 
 
 
