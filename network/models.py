@@ -16,6 +16,9 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     like = models.IntegerField(default=0, blank=True)
 
+    def __str__(self):
+       return f"Post: ({self.id}) {self.content}"
+    
     def serialize(self):
         return {
             "id": self.id,
@@ -46,7 +49,7 @@ class Like(models.Model):
     user = models.ForeignKey("User", on_delete=models.CASCADE)
         
     def __str__(self):
-       return f"{self.post}: User{self.user}"
+       return f"{self.post} | User: {self.user}"
 
     class Meta:
         unique_together = ["post", "user"]

@@ -120,8 +120,8 @@ def new_post(request):
 @csrf_exempt
 def edit_post(request, post_user, post_id):
     # New Post must be via POST
-    if request.method != "POST":
-        return JsonResponse({"error": "POST request required"}, status=400)
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required"}, status=400)
     else:
         try:
             post = Post.objects.get(user__username=post_user, id=post_id)
@@ -232,17 +232,16 @@ def get_likes(request, post):
         return JsonResponse({"likes": "0"})
 
 # Like or remove like from post with user
+@csrf_exempt
 def like(request, post, user):
-    try:
-        f = Like.objects.get(post__id=post, user__username=user)
-        f.delete()
-        return JsonResponse({"message": "Like found and deleted. (Unlike)"})     
-    except Like.DoesNotExist:
-        f = Like(post=Post.objects.get(id=post), user=User.objects.get(username=user))
-        f.save()
-        return JsonResponse({"message": "Post liked"})
-
-
-
-
-
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required"}, status=400)
+    else:
+        try:
+            f = Like.objects.get(post__id=post, user__username=user)
+            f.delete()
+            return JsonResponse({"message": "Like found and deleted. (Unlike)"})     
+        except Like.DoesNotExist:
+            f = Like(post=Post.objects.get(id=post), user=User.objects.get(username=user))
+            f.save()
+            return JsonResponse({"message": "Post liked"})
