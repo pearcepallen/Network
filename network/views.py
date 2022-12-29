@@ -227,6 +227,8 @@ def get_likes(request, post):
     try:
         post = Post.objects.get(id=post)
         like_count = post.post_likes.all().count()
+        post.like = like_count
+        post.save()
         return JsonResponse({"likes": like_count})
     except Post.DoesNotExist:
         return JsonResponse({"likes": "0"})
