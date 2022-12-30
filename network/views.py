@@ -12,17 +12,14 @@ from django.urls import reverse
 
 from django.views.decorators.csrf import csrf_exempt
 
-
 from .models import *
 
 
 def index(request):
     return render(request, "network/index.html")
 
-
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -105,7 +102,7 @@ def profile_posts(request, user, page):
 def new_post(request):
     # New Post must be via POST
     if request.method != "POST":
-        return JsonResponse({"error": "POST request required"}, status=400)
+        return JsonResponse({"error": "POST request required"}, status=405)
 
     data = json.loads(request.body)
     post = Post(
@@ -121,7 +118,7 @@ def new_post(request):
 def edit_post(request, post_user, post_id):
     # New Post must be via POST
     if request.method != "PUT":
-        return JsonResponse({"error": "PUT request required"}, status=400)
+        return JsonResponse({"error": "PUT request required"}, status=405)
     else:
         try:
             post = Post.objects.get(user__username=post_user, id=post_id)
@@ -147,19 +144,22 @@ def posts(request, page):
                 "data": [page.serialize() for page in page_obj]})
         return JsonResponse(data, safe=False)
 
-
+@csrf_exempt
 def follow(request, user, req_user):
-    #Check if user is already followed by request.user
-    try:
-        f = Following.objects.get(user__username=user, following__username=req_user)
-    except Following.DoesNotExist:
-        f = Following(user=User.objects.get(username=user), following=User.objects.get(username=req_user))
-        f.save()
-        return JsonResponse({"message": "User followed"})
+    if request.method != "PUT":
+        return JsonResponse({"error": "PUT request required"}, status=405)
+    else:
+        #Check if user is already followed by request.user
+        try:
+            f = Following.objects.get(user__username=user, following__username=req_user)
+        except Following.DoesNotExist:
+            f = Following(user=User.objects.get(username=user), following=User.objects.get(username=req_user))
+            f.save()
+            return JsonResponse({"message": "User followed"})
 
-    #Delete entry if already followed
-    f.delete()
-    return JsonResponse({"message": "User unfollowed"})
+        #Delete entry if already followed
+        f.delete()
+        return JsonResponse({"message": "User unfollowed"})
 
 
 def followed(request, user, req_user):
@@ -221,6 +221,14 @@ def following(request):
 
 # Like Functions
 # post is id of specific post
+
+# Check if user likes post
+def is_like(request, post, req_user):
+    try:
+        like = Like.objects.get(post__id = post, user__username = req_user)        
+        return JsonResponse({"like": True})
+    except Like.DoesNotExist:
+        return JsonResponse({"like": False})
 
 # Count likes for a post
 def get_likes(request, post):
